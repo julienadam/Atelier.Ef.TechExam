@@ -4,6 +4,7 @@ using Atelier.Ef.TechExam.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Atelier.Ef.TechExam.Migrations
 {
     [DbContext(typeof(TechExamContext))]
-    partial class TechExamContextModelSnapshot : ModelSnapshot
+    [Migration("20250301095853_AddedParametrageExamen")]
+    partial class AddedParametrageExamen
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

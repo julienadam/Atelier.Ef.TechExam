@@ -7,6 +7,7 @@ namespace Atelier.Ef.TechExam.Entities;
 public partial class TechExamContext : DbContext
 {
     public DbSet<Sujet> Sujets { get; set; }
+    public DbSet<ParametrageExamen> ParametragesExamen { get; set; }
 
     public TechExamContext()
     {
@@ -23,6 +24,7 @@ public partial class TechExamContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly);
         OnModelCreatingPartial(modelBuilder);
     }
 
