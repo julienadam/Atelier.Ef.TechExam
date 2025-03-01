@@ -9,6 +9,7 @@ namespace Atelier.Ef.TechExam.TypeConfigurations
         public void Configure(EntityTypeBuilder<Sujet> builder)
         {
             builder.Property(e => e.Titre).HasMaxLength(50);
+            builder.HasMany(e => e.Questions);
         }
     }
 }

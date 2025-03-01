@@ -10,5 +10,7 @@
         public string? EmailValidation { get; set; }
 
         public List<Reponse> Reponses { get; set; } = [];
+
+        public List<Sujet> Sujets { get; set; } = [];
     }
 }
