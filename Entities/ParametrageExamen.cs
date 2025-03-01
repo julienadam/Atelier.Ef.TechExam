@@ -1,4 +1,6 @@
-﻿namespace Atelier.Ef.TechExam.Entities
+﻿using Atelier.Ef.TechExam.Domain;
+
+namespace Atelier.Ef.TechExam.Entities
 {
     public class ParametrageExamen
     {
@@ -7,9 +9,9 @@
         /// pas générée par le système et doit être spécifiée côté client.
         /// </summary>
         public required Guid ParametrageExamenId { get; set; }
-        public int PourcentageDebutant { get; set; }
-        public int PourcentageIntermediaire { get; set; }
-        public int PourcentageAvance { get; set; }
+        public required StrictIntPercent PourcentageDebutant { get; set; }
+        public required StrictIntPercent PourcentageIntermediaire { get; set; }
+        public required StrictIntPercent PourcentageAvance { get; set; }
         public int DureeMinutes { get; set; }
         public int QuestionsLibres { get; set; }
 

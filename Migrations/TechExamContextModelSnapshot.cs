@@ -50,7 +50,7 @@ namespace Atelier.Ef.TechExam.Migrations
 
                     b.HasIndex("SujetId");
 
-                    b.ToTable("ParametragesExamen", t =>
+                    b.ToTable("ParametragesExamen", null, t =>
                         {
                             t.HasCheckConstraint("CK_percentages_are_correct", "PourcentageDebutant >= 0 AND PourcentageIntermediaire >= 0 AND PourcentageAvance >= 0 AND PourcentageDebutant + PourcentageIntermediaire + PourcentageAvance = 100");
                         });
@@ -83,7 +83,7 @@ namespace Atelier.Ef.TechExam.Migrations
 
                     b.HasIndex("Niveau");
 
-                    b.ToTable("Questions", t =>
+                    b.ToTable("Questions", null, t =>
                         {
                             t.HasCheckConstraint("CK_niveau_is_correct", "Niveau IN ('Debutant', 'Intermediaire', 'Avance')");
                         });
@@ -116,7 +116,7 @@ namespace Atelier.Ef.TechExam.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Reponses");
+                    b.ToTable("Reponses", (string)null);
                 });
 
             modelBuilder.Entity("Atelier.Ef.TechExam.Entities.Sujet", b =>
@@ -137,7 +137,7 @@ namespace Atelier.Ef.TechExam.Migrations
                     b.HasIndex("Titre")
                         .IsUnique();
 
-                    b.ToTable("Sujets");
+                    b.ToTable("Sujets", (string)null);
                 });
 
             modelBuilder.Entity("QuestionSujet", b =>
@@ -152,7 +152,7 @@ namespace Atelier.Ef.TechExam.Migrations
 
                     b.HasIndex("SujetsSujetId");
 
-                    b.ToTable("QuestionSujet");
+                    b.ToTable("QuestionSujet", (string)null);
                 });
 
             modelBuilder.Entity("Atelier.Ef.TechExam.Entities.QuestionChoixMultiple", b =>

@@ -4,10 +4,16 @@
     {
         public int QuestionId { get; set; }
         public required string Contenu { get; set; }
-       
 
-        public required string Niveau { get; set; }
+        public Niveau Niveau { get; set; }
 
         public List<Sujet> Sujets { get; set; } = [];
+    }
+
+    public enum Niveau
+    {
+        Debutant,
+        Intermediaire,
+        Avance
     }
 }
