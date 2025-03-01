@@ -4,6 +4,7 @@ using Atelier.Ef.TechExam.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Atelier.Ef.TechExam.Migrations
 {
     [DbContext(typeof(TechExamContext))]
-    partial class TechExamContextModelSnapshot : ModelSnapshot
+    [Migration("20250301104439_AddedQuestionNiveauAndIndices")]
+    partial class AddedQuestionNiveauAndIndices
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,10 +53,7 @@ namespace Atelier.Ef.TechExam.Migrations
 
                     b.HasIndex("SujetId");
 
-                    b.ToTable("ParametragesExamen", t =>
-                        {
-                            t.HasCheckConstraint("CK_percentages_are_correct", "PourcentageDebutant >= 0 AND PourcentageIntermediaire >= 0 AND PourcentageAvance >= 0 AND PourcentageDebutant + PourcentageIntermediaire + PourcentageAvance = 100");
-                        });
+                    b.ToTable("ParametragesExamen");
                 });
 
             modelBuilder.Entity("Atelier.Ef.TechExam.Entities.Question", b =>
@@ -83,10 +83,7 @@ namespace Atelier.Ef.TechExam.Migrations
 
                     b.HasIndex("Niveau");
 
-                    b.ToTable("Questions", t =>
-                        {
-                            t.HasCheckConstraint("CK_niveau_is_correct", "Niveau IN ('Debutant', 'Intermediaire', 'Avance')");
-                        });
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("Atelier.Ef.TechExam.Entities.Reponse", b =>

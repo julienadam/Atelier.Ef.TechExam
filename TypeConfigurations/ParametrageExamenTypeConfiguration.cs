@@ -16,6 +16,10 @@ namespace Atelier.Ef.TechExam.TypeConfigurations
                 .ValueGeneratedNever();
 
             builder.HasOne(e => e.Sujet);
+            builder.ToTable(
+                t => t.HasCheckConstraint("CK_percentages_are_correct",
+                "PourcentageDebutant >= 0 AND PourcentageIntermediaire >= 0 AND PourcentageAvance >= 0 AND PourcentageDebutant + PourcentageIntermediaire + PourcentageAvance = 100")
+            );
         }
     }
 }

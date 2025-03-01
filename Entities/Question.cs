@@ -9,6 +9,8 @@
         /// </summary>
         public string? EmailValidation { get; set; }
 
+        public required string Niveau { get; set; }
+
         public List<Reponse> Reponses { get; set; } = [];
 
         public List<Sujet> Sujets { get; set; } = [];
