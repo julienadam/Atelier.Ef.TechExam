@@ -15,6 +15,15 @@ namespace Atelier.Ef.TechExam.TypeConfigurations
                 .HasComment("Contient l'identifiant de l'offre d'emploi en provenance du système RH amont. La valeur n'est pas générée par le système et doit être spécifiée côté client.")
                 .ValueGeneratedNever();
 
+            builder
+                .OwnsOne(e => e.VentilationParNiveaux, b =>
+                {
+                    b.Property(t => t.PourcentageDebutant).HasColumnName(nameof(VentilationParNiveaux.PourcentageDebutant));
+                    b.Property(t => t.PourcentageIntermediaire).HasColumnName(nameof(VentilationParNiveaux.PourcentageIntermediaire));
+                    b.Property(t => t.PourcentageAvance).HasColumnName(nameof(VentilationParNiveaux.PourcentageAvance));
+                }
+                );
+
             builder.HasOne(e => e.Sujet);
             builder.ToTable(
                 t => t.HasCheckConstraint("CK_percentages_are_correct",
