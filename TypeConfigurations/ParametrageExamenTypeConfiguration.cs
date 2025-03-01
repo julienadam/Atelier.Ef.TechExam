@@ -14,6 +14,8 @@ namespace Atelier.Ef.TechExam.TypeConfigurations
                 .Property(e => e.ParametrageExamenId)
                 .HasComment("Contient l'identifiant de l'offre d'emploi en provenance du système RH amont. La valeur n'est pas générée par le système et doit être spécifiée côté client.")
                 .ValueGeneratedNever();
+
+            builder.HasOne(e => e.Sujet);
         }
     }
 }

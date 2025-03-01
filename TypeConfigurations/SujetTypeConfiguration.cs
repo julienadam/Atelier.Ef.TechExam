@@ -10,6 +10,7 @@ namespace Atelier.Ef.TechExam.TypeConfigurations
         {
             builder.Property(e => e.Titre).HasMaxLength(50);
             builder.HasMany(e => e.Questions);
+            builder.HasMany<ParametrageExamen>().WithOne(e => e.Sujet);
         }
     }
 }

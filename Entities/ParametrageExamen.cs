@@ -12,5 +12,8 @@
         public int PourcentageAvance { get; set; }
         public int DureeMinutes { get; set; }
         public int QuestionsLibres { get; set; }
+
+        public int SujetId { get; set; }
+        public Sujet Sujet { get; set; }
     }
 }
