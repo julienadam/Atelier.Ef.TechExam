@@ -8,6 +8,7 @@ public partial class TechExamContext : DbContext
 {
     public DbSet<Sujet> Sujets { get; set; }
     public DbSet<Question> Questions { get; set; }
+    public DbSet<Reponse> Reponses { get; set; }
     public DbSet<ParametrageExamen> ParametragesExamen { get; set; }
 
     public TechExamContext()
