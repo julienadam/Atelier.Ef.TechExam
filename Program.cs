@@ -9,7 +9,103 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 // RemoveReponseById();
 // RemoveReponseOnQuestion();
 // ModifyAndAttach();
-ReadChangeTracking();
+// ReadChangeTracking();
+// CascadeDelete();
+// ProblematicCascadeDelete();
+// NonProblematicCascadeDelete();
+ManualCascadeDelete();
+
+static void ManualCascadeDelete()
+{
+    // Attention: nécessite d'avoir exécuté NonProblematicCascadeDelete avant
+    using (var context = new TechExamContext())
+    {
+        var sujet = context.Sujets
+            .Single(s => s.Titre == "ProblematicCascadeDelete");
+        
+        var parametrages = context.ParametragesExamen
+            .Where(p => p.SujetId == sujet.SujetId);
+
+        context.ParametragesExamen.RemoveRange(parametrages);
+        context.Sujets.Remove(sujet);
+        context.SaveChanges();
+    }
+}
+
+static void NonProblematicCascadeDelete()
+{
+    // ATTENTION: vérifier le comportement de cascading avant de lancer
+    // Vérifier qu'on a bien un OnDelete(NoAction) sur Sujet <-> ParametrageExamen
+    ProblematicCascadeDelete();
+}
+
+static void ProblematicCascadeDelete()
+{
+    // ATTENTION: vérifier le comportement de cascading avant de lancer
+    // Vérifier qu'on a pas de OnDelete Sujet <-> ParametrageExamen
+    var sujetId = 0;
+    using (var context = new TechExamContext())
+    {
+        var sujet = new Sujet { Titre = "ProblematicCascadeDelete" };
+        var p = new ParametrageExamen
+        {
+            ParametrageExamenId = Guid.NewGuid(),
+            Sujet = sujet,
+            VentilationParNiveaux = new VentilationParNiveaux
+            {
+                PourcentageDebutant = (StrictIntPercent)1,
+                PourcentageIntermediaire = (StrictIntPercent) 1,
+                PourcentageAvance = (StrictIntPercent)98,
+            }
+        };
+        context.ParametragesExamen.Add(p);
+        context.SaveChanges();
+        sujetId = sujet.SujetId;
+    }
+
+    using (var context = new TechExamContext())
+    {
+        var sujet = context
+            .Sujets
+            .Single(q => q.SujetId == sujetId);
+
+        context.Remove(sujet);
+        context.SaveChanges();
+    }
+}
+
+static void CascadeDelete()
+{
+    var qId = 0;
+    using (var context = new TechExamContext())
+    {
+        var sujet = new Sujet { Titre = "Java" };
+        var question = new QuestionChoixMultiple
+        {
+            Sujets = [sujet],
+            Contenu = "Which of the following is a correct variable declaration in Java?",
+            Niveau = Niveau.Debutant,
+            Reponses =
+            [
+                new Reponse { Contenu = "int number = 5;", Correcte = true },
+                new Reponse { Contenu = "integer number = 5;", Correcte = false },
+                new Reponse { Contenu = "num number = 5;", Correcte = false },
+                new Reponse { Contenu = "number: int = 5;", Correcte = false },
+            ]
+        };
+
+        context.Questions.Add(question);
+        context.SaveChanges();
+        qId = question.QuestionId;
+    }
+
+    using (var context = new TechExamContext())
+    {
+        var question = context.Questions.Single(q => q.QuestionId == qId);
+        context.Remove(question);
+        context.SaveChanges();
+    }
+}
 
 static void ValidatePercents(EntityEntry<VentilationParNiveaux> entry)
 {
