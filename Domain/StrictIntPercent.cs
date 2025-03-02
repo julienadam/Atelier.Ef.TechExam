@@ -16,6 +16,8 @@ namespace Atelier.Ef.TechExam.Domain
             {
                 throw new ArgumentOutOfRangeException(nameof(percentage), "Strict int precent cannot be more than 100, it must be between 0 and 100");
             }
+
+            this.Percentage = percentage;
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

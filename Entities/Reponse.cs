@@ -7,6 +7,6 @@
         public bool Correcte { get; set; }
 
         public int QuestionId { get; set; }
-        public required QuestionChoixMultiple Question { get; set; }
+        public QuestionChoixMultiple Question { get; set; }
     }
 }

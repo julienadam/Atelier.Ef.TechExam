@@ -12,6 +12,6 @@
         public int QuestionsLibres { get; set; }
 
         public int SujetId { get; set; }
-        public required Sujet Sujet { get; set; }
+        public Sujet Sujet { get; set; }
     }
 }
