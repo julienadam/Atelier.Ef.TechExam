@@ -1,5 +1,7 @@
 ﻿using Atelier.Ef.TechExam.Domain;
 using Atelier.Ef.TechExam.Entities;
+using Dapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -13,7 +15,64 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 // CascadeDelete();
 // ProblematicCascadeDelete();
 // NonProblematicCascadeDelete();
-ManualCascadeDelete();
+// ManualCascadeDelete();
+// TxEnChaine();
+TxExterne(true);
+//TxExterne(false);
+
+static void TxExterne(bool commit)
+{
+    using var conn = new SqlConnection(TechExamContext.CONN_STR);
+    conn.Open();
+    using var tx = conn.BeginTransaction();
+
+    var titre = $"TxExterne{Guid.NewGuid()}";
+
+    conn.Execute(
+        "INSERT INTO Sujets (Titre) VALUES (@titre)", 
+        new { titre }, transaction: tx);
+
+    using(var context = new TechExamContext())
+    {
+        context.Database.SetDbConnection(conn);
+        context.Database.UseTransaction(tx);
+
+        var sujet = context.Sujets.Single(s => s.Titre == titre);
+        var q = new QuestionChoixMultiple
+        {
+            Sujets = [sujet],
+            Contenu = "Question Tx Externe " + titre,
+            Niveau = Niveau.Debutant,
+            Reponses = []
+        };
+        context.Questions.Add(q);
+        context.SaveChanges();
+    }
+    if (commit)
+    {
+        tx.Commit();
+    }
+    else
+    {
+        tx.Rollback();
+    }
+    
+}
+
+static void TxEnChaine()
+{
+    using (var context = new TechExamContext())
+    {
+        context.Sujets.Add(new Sujet { Titre = "TxEnChaine" });
+        context.SaveChanges();
+
+        context.Sujets.Add(new Sujet { Titre = "TxEnChaine2" });
+        context.SaveChanges();
+
+        context.Sujets.Add(new Sujet { Titre = "TxEnChaine" });
+        context.SaveChanges();
+    }
+}
 
 static void ManualCascadeDelete()
 {
