@@ -20,9 +20,9 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 // TxExterne(true);
 // TxExterne(false);
 
-PasDeConcurrence();
+ConcurrenceOptimiste();
 
-static void PasDeConcurrence()
+static void ConcurrenceOptimiste()
 {
     int passageId = CreatePassage();
     Task.WaitAll(
@@ -61,8 +61,15 @@ static async Task PrendreRendezVous(int passageId, DateTime dateRendezVous)
     }
 
     await Task.Delay(TimeSpan.FromSeconds(6));
-    await context.SaveChangesAsync();
-    Console.WriteLine("Rendez-vous pris");
+    try
+    {
+        await context.SaveChangesAsync();
+        Console.WriteLine("Rendez-vous pris");
+    }
+    catch(DbUpdateConcurrencyException ex)
+    {
+        Console.WriteLine("L'état du passage a changé, rechargez la page et réessayez");
+    }
 }
 
 static void TxExterne(bool commit)

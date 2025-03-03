@@ -16,6 +16,10 @@ namespace Atelier.Ef.TechExam.TypeConfigurations
                 .HasOne(e => e.ParametrageExamen)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Property(e => e.Statut).IsConcurrencyToken();
+            builder.Property(e => e.RendezVous).IsConcurrencyToken();
+            builder.Property(e => e.RaisonAnnulation).IsConcurrencyToken();
         }
     }
 }
