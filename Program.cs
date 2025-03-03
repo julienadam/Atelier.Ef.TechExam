@@ -17,8 +17,53 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 // NonProblematicCascadeDelete();
 // ManualCascadeDelete();
 // TxEnChaine();
-TxExterne(true);
-//TxExterne(false);
+// TxExterne(true);
+// TxExterne(false);
+
+PasDeConcurrence();
+
+static void PasDeConcurrence()
+{
+    int passageId = CreatePassage();
+    Task.WaitAll(
+        AnnulerPassage(passageId, "Le candidat a trouvé un poste ailleurs."), 
+        PrendreRendezVous(passageId, DateTime.Now.AddDays(1)));
+}
+
+static async Task AnnulerPassage(int passageId, string raison)
+{
+    Console.WriteLine("Démarrage de l'annulation");
+    using var context = new TechExamContext();
+    var passage = await context.Passages.SingleAsync(p => p.PassageId == passageId);
+
+    if (passage.Statut != StatutPassage.Annule)
+    {
+        passage.Statut = StatutPassage.Annule;
+        passage.RendezVous = null;
+        passage.RaisonAnnulation = raison;
+    }
+
+    await Task.Delay(TimeSpan.FromSeconds(3));
+    await context.SaveChangesAsync();
+    Console.WriteLine("Annulation enregistrée");
+}
+
+static async Task PrendreRendezVous(int passageId, DateTime dateRendezVous)
+{
+    Console.WriteLine("Démarrage du rendez-vous");
+    using var context = new TechExamContext();
+    var passage = await context.Passages.SingleAsync(p => p.PassageId == passageId);
+
+    if (passage.Statut == StatutPassage.NonPlanifie)
+    {
+        passage.RendezVous = dateRendezVous;
+        passage.Statut = StatutPassage.Planifie;
+    }
+
+    await Task.Delay(TimeSpan.FromSeconds(6));
+    await context.SaveChangesAsync();
+    Console.WriteLine("Rendez-vous pris");
+}
 
 static void TxExterne(bool commit)
 {
@@ -311,4 +356,31 @@ static void CreateQuestion()
     context.Questions.Add(question);
 
     context.SaveChanges();
+}
+
+static int CreatePassage()
+{
+    using var context = new TechExamContext();
+    var parametrage = new ParametrageExamen
+    {
+        ParametrageExamenId = Guid.NewGuid(),
+        VentilationParNiveaux = new VentilationParNiveaux
+        {
+            PourcentageDebutant = (StrictIntPercent)60,
+            PourcentageIntermediaire = (StrictIntPercent)30,
+            PourcentageAvance = (StrictIntPercent)10,
+        },
+        Sujet = context.Sujets.First()
+    };
+
+    var passage = new Passage
+    {
+        CandidatId = Guid.NewGuid(),
+        ParametrageExamen = parametrage,
+        Statut = StatutPassage.NonPlanifie
+    };
+
+    context.Add(passage);
+    context.SaveChanges();
+    return passage.PassageId;
 }

@@ -13,6 +13,7 @@ public partial class TechExamContext : DbContext
     public DbSet<Question> Questions { get; set; }
     public DbSet<Reponse> Reponses { get; set; }
     public DbSet<ParametrageExamen> ParametragesExamen { get; set; }
+    public DbSet<Passage> Passages { get; set; }
 
     public TechExamContext()
     {
